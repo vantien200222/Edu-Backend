@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6">Product Management</h1>
+
+        <div class="form-group mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Create Product</h2>
+            <label for="create-name" class="block mb-2">Name</label>
+            <input type="text" id="create-name" class="w-full p-2 border border-gray-300 rounded mb-4">
+            <label for="create-description" class="block mb-2">Description</label>
+            <textarea id="create-description" class="w-full p-2 border border-gray-300 rounded mb-4"></textarea>
+            <label for="create-price" class="block mb-2">Price</label>
+            <input type="number" id="create-price" class="w-full p-2 border border-gray-300 rounded mb-4">
+            <label for="create-category" class="block mb-2">Category</label>
+            <input type="text" id="create-category" class="w-full p-2 border border-gray-300 rounded mb-4">
+            <label for="create-stock" class="block mb-2">Stock</label>
+            <input type="number" id="create-stock" class="w-full p-2 border border-gray-300 rounded mb-4">
+            <button onclick="createProduct()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Create</button>
+        </div>
+
+        <div class="form-group mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Update Product</h2>
+            <label for="update-id" class="block mb-2">Product ID</label>
+            <input type="text" id="update-id" class="w-full p-2 border border-gray-300 rounded mb-4">
+            <label for="update-name" class="block mb-2">Name</label>
+            <input type="text" id="update-name" class="w-full p-2 border border-gray-300 rounded mb-4">
+            <label for="update-description" class="block mb-2">Description</label>
+            <textarea id="update-description" class="w-full p-2 border border-gray-300 rounded mb-4"></textarea>
+            <label for="update-price" class="block mb-2">Price</label>
+            <input type="number" id="update-price" class="w-full p-2 border border-gray-300 rounded mb-4">
+            <label for="update-category" class="block mb-2">Category</label>
+            <input type="text" id="update-category" class="w-full p-2 border border-gray-300 rounded mb-4">
+            <label for="update-stock" class="block mb-2">Stock</label>
+            <input type="number" id="update-stock" class="w-full p-2 border border-gray-300 rounded mb-4">
+            <button onclick="updateProduct()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Update</button>
+        </div>
+
+        <div class="form-group mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Delete Product</h2>
+            <label for="delete-id" class="block mb-2">Product ID</label>
+            <input type="text" id="delete-id" class="w-full p-2 border border-gray-300 rounded mb-4">
+            <button onclick="deleteProduct()" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700">Delete</button>
+        </div>
+
+        <div class="form-group mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Get All Products</h2>
+            <label for="getall-page" class="block mb-2">Page</label>
+            <input type="number" id="getall-page" value="1" class="w-full p-2 border border-gray-300 rounded mb-4">
+            <label for="getall-limit" class="block mb-2">Limit</label>
+            <input type="number" id="getall-limit" value="10" class="w-full p-2 border border-gray-300 rounded mb-4">
+            <button onclick="getAllProducts()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Get All</button>
+        </div>
+
+        <div class="form-group mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Get Product By ID</h2>
+            <label for="getbyid-id" class="block mb-2">Product ID</label>
+            <input type="text" id="getbyid-id" class="w-full p-2 border border-gray-300 rounded mb-4">
+            <button onclick="getProductById()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Get By ID</button>
+        </div>
+
+        <div class="form-group mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Search Products</h2>
+            <label for="search-term" class="block mb-2">Search Term</label>
+            <input type="text" id="search-term" class="w-full p-2 border border-gray-300 rounded mb-4">
+            <label for="search-page" class="block mb-2">Page</label>
+            <input type="number" id="search-page" value="1" class="w-full p-2 border border-gray-300 rounded mb-4">
+            <label for="search-limit" class="block mb-2">Limit</label>
+            <input type="number" id="search-limit" value="10" class="w-full p-2 border border-gray-300 rounded mb-4">
+            <button onclick="searchProducts()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Search</button>
+        </div>
+
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        const apiUrl = 'http://localhost:3100/api/product';
+
+        async function createProduct() {
+            const name = document.getElementById('create-name').value;
+            const description = document.getElementById('create-description').value;
+            const price = document.getElementById('create-price').value;
+            const category = document.getElementById('create-category').value;
+            const stock = document.getElementById('create-stock').value;
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer YOUR_TOKEN_HERE'
+                },
+                body: JSON.stringify({ name, description, price, category, stock })
+            });
+
+            const result = await response.json();
+            document.getElementById('result').innerText = JSON.stringify(result, null, 2);
+        }
+
+        async function updateProduct() {
+            const id = document.getElementById('update-id').value;
+            const name = document.getElementById('update-name').value;
+            const description = document.getElementById('update-description').value;
+            const price = document.getElementById('update-price').value;
+            const category = document.getElementById('update-category').value;
+            const stock = document.getElementById('update-stock').value;
+
+            const response = await fetch(`${apiUrl}/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer YOUR_TOKEN_HERE'
+                },
+                body: JSON.stringify({ name, description, price, category, stock })
+            });
+
+            const result = await response.json();
+            document.getElementById('result').innerText = JSON.stringify(result, null, 2);
+        }
+
+        async function deleteProduct() {
+            const id = document.getElementById('delete-id').value;
+
+            const response = await fetch(`${apiUrl}/${id}`, {
+                method: 'DELETE',
+                
+            });
+
+            const result = await response.json();
+            document.getElementById('result').innerText = JSON.stringify(result, null, 2);
+        }
+
+        async function getAllProducts() {
+            const page = document.getElementById('getall-page').value;
+            const limit = document.getElementById('getall-limit').value;
+
+            const response = await fetch(`${apiUrl}?page=${page}&limit=${limit}`, {
+                method: 'GET',
+                
+            });
+
+            const result = await response.json();
+            document.getElementById('result').innerText = JSON.stringify(result, null, 2);
+        }
+
+        async function getProductById() {
+            const id = document.getElementById('getbyid-id').value;
+
+            const response = await fetch(`${apiUrl}/${id}`, {
+                method: 'GET',
+                
+            });
+
+            const result = await response.json();
+            document.getElementById('result').innerText = JSON.stringify(result, null, 2);
+        }
+
+        async function searchProducts() {
+            const searchTerm = document.getElementById('search-term').value;
+            const page = document.getElementById('search-page').value;
+            const limit = document.getElementById('search-limit').value;
+
+            const response = await fetch(`${apiUrl}/search?q=${searchTerm}&page=${page}&limit=${limit}`, {
+                method: 'GET',
+                
+            });
+
+            const result = await response.json();
+            document.getElementById('result').innerText = JSON.stringify(result, null, 2);
+        }
+    </script>
+</body>
+</html>
